@@ -1,0 +1,138 @@
+# Copyright (C) 2026 ChrisB @ HivePress Community
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Permalinks for HivePress 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/permalinks-for-hivepress\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-31T13:29:37+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: permalinks-for-hivepress\n"
+
+#. Description of the plugin
+#: permalinks-for-hivepress.php
+msgid "Build SEO-friendly web addresses for listings, vendors and requests by adding their category and region, with new options on the Permalinks page."
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1074
+msgid "HivePress URLs"
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1086
+msgid "Prefix"
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1094
+msgid "Keep HivePress addresses at the top level"
+msgstr ""
+
+#. translators: %s: the prefix taken from the site's permalink structure, such as /blog/.
+#: includes/components/class-hppl-permalinks.php:1097
+#, php-format
+msgid "Your permalink structure adds %s to the front of every address, including HivePress ones. Tick this to leave HivePress addresses without it."
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1106
+msgid "Removing the plugin"
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1114
+msgid "Delete all data when this plugin is deleted"
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1115
+msgid "Your settings above are kept if you delete this plugin, even though the WordPress delete screen warns that data will be removed. Tick this box only if you want the settings deleted for good. This cannot be undone."
+msgstr ""
+
+#. translators: %s: an example address with no extra segments.
+#: includes/components/class-hppl-permalinks.php:1138
+#, php-format
+msgid "Default (%s)"
+msgstr ""
+
+#. translators: 1: the segments listed in order, such as "Category, region", 2: an example address.
+#: includes/components/class-hppl-permalinks.php:1146
+#, php-format
+msgid "%1$s (%2$s)"
+msgstr ""
+
+#. translators: %s: the singular name of the object type, lowercased, such as "listing".
+#: includes/components/class-hppl-permalinks.php:1165
+#, php-format
+msgid "Choose what appears in the address of each %s. Whichever you pick, the old addresses keep working."
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1172
+msgid "Spell out nested terms in full"
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1173
+msgid "A term inside another one brings its parents with it, so a city shows as country/region/city rather than just the city."
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1343
+msgid "Add the category or region to HivePress web addresses to help with SEO. Old addresses keep working: visitors and search engines are sent to the new address automatically, including after you rename something."
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1346
+msgid "These options need pretty permalinks, so choose any permalink structure other than \"Plain\" above first."
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1350
+msgid "No HivePress content types with categories were found on this site yet."
+msgstr ""
+
+#: includes/updater.php:669
+msgid "See the GitHub releases page for the changelog."
+msgstr ""
+
+#: includes/updater.php:682
+msgid "Check for updates"
+msgstr ""
+
+#. translators: %s: version number of the new release.
+#: includes/updater.php:752
+#, php-format
+msgid "A new version of Permalinks for HivePress (%s) is available."
+msgstr ""
+
+#: includes/updater.php:755
+msgid "Permalinks for HivePress is up to date."
+msgstr ""
+
+#: includes/updater.php:758
+msgid "Permalinks for HivePress has no releases published yet, so there is nothing to update to. This is normal for a new install and nothing is wrong."
+msgstr ""
+
+#: includes/updater.php:761
+msgid "No releases have been published for Permalinks for HivePress yet, so there is nothing to update to. This is normal for a brand new copy and does not mean anything is wrong."
+msgstr ""
+
+#: includes/updater.php:764
+msgid "GitHub limits how many update checks one server may make each hour, and this server has reached that limit. Nothing is wrong with the plugin or your site, and checking will work again within the hour."
+msgstr ""
+
+#: includes/updater.php:767
+msgid "Could not reach GitHub to check for updates. Please try again later."
+msgstr ""
+
+#: includes/updater.php:809
+msgid "Could not rename the update directory."
+msgstr ""
+
+#: permalinks-for-hivepress.php:175
+msgid "Settings"
+msgstr ""
+
+#: permalinks-for-hivepress.php:191
+msgid "Permalinks for HivePress requires the HivePress plugin to be installed and activated."
+msgstr ""
+
+#: permalinks-for-hivepress.php:227
+msgid "Donate"
+msgstr ""
