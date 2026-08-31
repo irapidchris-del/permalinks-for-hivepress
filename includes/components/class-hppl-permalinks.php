@@ -102,6 +102,10 @@ final class Hppl_Permalinks extends Component {
 		add_filter( 'register_post_type_args', [ $this, 'set_permalink_front' ], 20, 2 );
 		add_filter( 'register_taxonomy_args', [ $this, 'set_permalink_front' ], 20, 2 );
 
+		// Give blog posts a folder of their own, leaving HivePress addresses where they are.
+		add_action( 'generate_rewrite_rules', [ $this, 'add_blog_prefix_rules' ] );
+		add_filter( 'post_link', [ $this, 'set_blog_prefix_link' ], 10, 2 );
+
 		if ( is_admin() ) {
 
 			// Add the options to the Permalinks page, saving first.
@@ -400,7 +404,10 @@ final class Hppl_Permalinks extends Component {
 		 * the generated rules without changing any structure string, so salting with the version
 		 * makes every update rebuild exactly once.
 		 */
-		$fingerprint = HPPL_VERSION . '|' . ( $this->has_front_removal() ? 'nofront' : 'front' ) . '|' . wp_json_encode( $fingerprint );
+		$fingerprint = HPPL_VERSION
+			. '|' . ( $this->has_front_removal() ? 'nofront' : 'front' )
+			. '|blog:' . $this->get_blog_prefix()
+			. '|' . wp_json_encode( $fingerprint );
 
 		if ( get_option( HPPL_OPTION_PREFIX . 'fingerprint' ) !== $fingerprint ) {
 			update_option( HPPL_OPTION_PREFIX . 'fingerprint', $fingerprint );
@@ -468,6 +475,138 @@ final class Hppl_Permalinks extends Component {
 		$wp_rewrite->extra_permastructs[ $post_type ]['walk_dirs'] = '' === $segments;
 
 		return $struct;
+	}
+
+	/*
+	 * ---------------------------------------------------------------------------------------------
+	 * Giving blog posts a folder of their own.
+	 * ---------------------------------------------------------------------------------------------
+	 */
+
+	/**
+	 * Gets the folder blog posts are served from, or an empty string when off.
+	 *
+	 * @return string
+	 */
+	public function get_blog_prefix() {
+		if ( ! $this->get_setting( 'blog_prefix' ) || $this->has_front() ) {
+			return '';
+		}
+
+		$slug = sanitize_title( (string) $this->get_setting( 'blog_prefix_slug', 'blog' ) );
+
+		return $slug ? $slug : 'blog';
+	}
+
+	/**
+	 * Adds the rules that serve blog posts from their folder.
+	 *
+	 * WHY THIS RATHER THAN A PERMALINK FRONT
+	 *
+	 * The obvious way to get /blog/ in front of posts is to set the site's own
+	 * permalink structure to `/blog/%postname%/`. WordPress treats whatever
+	 * precedes the first tag there as the site's FRONT and prepends it to
+	 * everything registered with the default `with_front`, so every listing,
+	 * vendor, category and tag address gains /blog/ as well. The usual answer to
+	 * that is to strip `with_front` back off every HivePress object, and on the
+	 * community topic where both approaches were worked through, HivePress
+	 * preferred this one: adding the folder to posts only is less to maintain
+	 * and cannot be outflanked by whatever registers the next post type. They
+	 * also noted the other approach can leave the prefix on ordinary pages.
+	 *
+	 * The rules are prepended so they are tested before WordPress's own, and the
+	 * specific ones come before the plain one, or /blog/my-post/feed/ would be
+	 * read as a post called "feed".
+	 *
+	 * @param \WP_Rewrite $wp_rewrite Rewrite instance.
+	 * @return void
+	 */
+	public function add_blog_prefix_rules( $wp_rewrite ) {
+		$prefix = $this->get_blog_prefix();
+
+		if ( ! $prefix ) {
+			return;
+		}
+
+		$prefix = preg_quote( $prefix, '#' );
+
+		$rules = [
+			$prefix . '/([^/]+)/feed/(feed|rdf|rss|rss2|atom)/?$' => 'index.php?name=$matches[1]&feed=$matches[2]',
+			$prefix . '/([^/]+)/(feed|rdf|rss|rss2|atom)/?$' => 'index.php?name=$matches[1]&feed=$matches[2]',
+			$prefix . '/([^/]+)/page/?([0-9]{1,})/?$' => 'index.php?name=$matches[1]&paged=$matches[2]',
+			$prefix . '/([^/]+)/comment-page-([0-9]{1,})/?$' => 'index.php?name=$matches[1]&cpage=$matches[2]',
+			$prefix . '/([^/]+)/embed/?$'             => 'index.php?name=$matches[1]&embed=true',
+			$prefix . '/([^/]+)/?$'                   => 'index.php?name=$matches[1]',
+		];
+
+		$wp_rewrite->rules = $rules + $wp_rewrite->rules;
+	}
+
+	/**
+	 * Puts the folder into a blog post's address.
+	 *
+	 * Only the plain `post` type, so pages, HivePress objects and every other
+	 * post type are left exactly as they were.
+	 *
+	 * @param string   $post_link Post URL.
+	 * @param \WP_Post $post Post object.
+	 * @return string
+	 */
+	public function set_blog_prefix_link( $post_link, $post ) {
+		$prefix = $this->get_blog_prefix();
+
+		if ( ! $prefix || ! $post instanceof \WP_Post || 'post' !== $post->post_type ) {
+			return $post_link;
+		}
+
+		// A draft has no usable slug yet, and WordPress gives it a query-string address.
+		if ( ! $post->post_name || false !== strpos( $post_link, '?' ) ) {
+			return $post_link;
+		}
+
+		return home_url( '/' . $prefix . '/' . $post->post_name . '/' );
+	}
+
+	/**
+	 * Sends an unprefixed blog post address to its prefixed one.
+	 *
+	 * WordPress's own post rules are untouched, so the old address still
+	 * resolves and one post would answer at two addresses. Duplicate content is
+	 * the opposite of what somebody turning on an SEO option wants.
+	 *
+	 * @return void
+	 */
+	protected function redirect_prefixed_post() {
+		if ( get_query_var( 'page' ) || get_query_var( 'cpage' ) || get_query_var( 'paged' ) ) {
+			return;
+		}
+
+		$post = get_queried_object();
+
+		if ( ! $post instanceof \WP_Post ) {
+			return;
+		}
+
+		$permalink = get_permalink( $post );
+
+		if ( ! $permalink || false !== strpos( $permalink, '?' ) ) {
+			return;
+		}
+
+		$requested = $this->get_requested_path();
+
+		$canonical = $this->normalise_path( (string) wp_parse_url( $permalink, PHP_URL_PATH ) );
+
+		if ( ! $requested || ! $canonical || $requested === $canonical ) {
+			return;
+		}
+
+		// Only the post's own address, never an endpoint hanging off it.
+		if ( basename( $requested ) !== rawurldecode( $post->post_name ) ) {
+			return;
+		}
+
+		$this->redirect_to( $permalink );
 	}
 
 	/**
@@ -712,6 +851,12 @@ final class Hppl_Permalinks extends Component {
 
 		if ( is_404() ) {
 			$this->redirect_missed_object();
+
+			return;
+		}
+
+		if ( $this->get_blog_prefix() && is_singular( 'post' ) ) {
+			$this->redirect_prefixed_post();
 
 			return;
 		}
@@ -1080,6 +1225,29 @@ final class Hppl_Permalinks extends Component {
 			$this->add_type_settings( $post_type );
 		}
 
+		if ( ! $this->has_front() ) {
+			add_settings_field(
+				HPPL_OPTION_PREFIX . 'blog_prefix',
+				esc_html__( 'Blog posts', 'permalinks-for-hivepress' ),
+				[ $this, 'render_settings_field' ],
+				'permalink',
+				'hppl_permalinks',
+				[
+					'name'        => HPPL_OPTION_PREFIX . 'blog_prefix',
+					'type'        => 'checkbox',
+					'current'     => (bool) $this->get_setting( 'blog_prefix' ),
+					'caption'     => esc_html__( 'Put your blog posts in a folder of their own', 'permalinks-for-hivepress' ),
+					'description' => esc_html__( 'Gives ordinary WordPress posts an address such as /blog/my-post/ while leaving every HivePress address exactly where it is. This is the way round HivePress recommend, because putting a prefix in the permalink structure above would place it in front of your listings and categories as well.', 'permalinks-for-hivepress' ),
+					'text'        => [
+						'name'        => HPPL_OPTION_PREFIX . 'blog_prefix_slug',
+						'current'     => (string) $this->get_setting( 'blog_prefix_slug', 'blog' ),
+						'label'       => esc_html__( 'Folder name', 'permalinks-for-hivepress' ),
+						'description' => esc_html__( 'Use a different word here if you prefer, such as news or articles. Whichever you choose, the addresses your posts had before are redirected to the new ones.', 'permalinks-for-hivepress' ),
+					],
+				]
+			);
+		}
+
 		if ( $this->has_front() ) {
 			add_settings_field(
 				HPPL_OPTION_PREFIX . 'no_front',
@@ -1291,7 +1459,7 @@ final class Hppl_Permalinks extends Component {
 		 * never untick it: the field vanished, the save loop stopped clearing it, and the stored
 		 * "1" went on forcing with_front off for good, reappearing the moment a front came back.
 		 */
-		$checkboxes = [ 'delete_data', 'no_front' ];
+		$checkboxes = [ 'delete_data', 'no_front', 'blog_prefix' ];
 
 		$settings = $this->get_settings();
 
@@ -1324,6 +1492,11 @@ final class Hppl_Permalinks extends Component {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked above.
 			$settings[ $key ] = isset( $_POST[ HPPL_OPTION_PREFIX . $key ] );
 		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- checked above.
+		$slug = isset( $_POST[ HPPL_OPTION_PREFIX . 'blog_prefix_slug' ] ) ? sanitize_title( wp_unslash( $_POST[ HPPL_OPTION_PREFIX . 'blog_prefix_slug' ] ) ) : '';
+
+		$settings['blog_prefix_slug'] = $slug ? $slug : 'blog';
 
 		$this->update_settings( $settings );
 
@@ -1394,6 +1567,19 @@ final class Hppl_Permalinks extends Component {
 			echo '</p>';
 
 			echo '<p class="description">' . esc_html( $args['nested']['description'] ) . '</p>';
+		}
+
+		// A checkbox can carry a text field, for the one option that needs a word as well as a yes.
+		if ( ! empty( $args['text'] ) ) {
+			$text = $args['text'];
+
+			echo '<p style="margin-top:.75em;"><label for="' . esc_attr( $text['name'] ) . '">' . esc_html( $text['label'] ) . ' </label>';
+
+			echo '<input name="' . esc_attr( $text['name'] ) . '" id="' . esc_attr( $text['name'] ) . '" type="text" class="regular-text code" value="' . esc_attr( $text['current'] ) . '" />';
+
+			echo '</p>';
+
+			echo '<p class="description">' . esc_html( $text['description'] ) . '</p>';
 		}
 	}
 

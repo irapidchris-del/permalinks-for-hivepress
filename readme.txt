@@ -4,7 +4,7 @@ Tags: hivepress, permalinks, seo, urls, listings
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,8 @@ Features:
 * Old addresses keep working. Anything that arrives on an old address, an address with an out-of-date category or region in it, or the address a listing had before you renamed it, is sent to the current address with a permanent redirect. Links you have shared, and pages search engines have already indexed, do not break.
 * Uses whichever base you have set on the Permalinks page, whether the default `listing` or something custom such as `ads`. Changing the base later is picked up automatically.
 * Objects with no category or region use `/other/` in their address, so an address is never left with an empty gap in it.
-* An option to keep HivePress addresses at the top level, for sites that have given their blog posts a prefix such as `/blog/`.
+* An option to put your ordinary WordPress blog posts in a folder of their own, such as `/blog/my-post/`, without that folder appearing in front of your listings and categories. You choose the folder name.
+* An option to keep HivePress addresses at the top level, for sites whose permalink structure already has a prefix.
 * Your settings are kept if you delete the plugin, unless you tick the box that asks for them to be removed.
 
 All settings are found under Settings, Permalinks, in the HivePress URLs section.
@@ -75,6 +76,12 @@ The address uses `/other/` in place of the missing one, so every object always h
 
 A page-caching plugin (such as FlyingPress, WP Rocket or W3 Total Cache) may still be serving a saved copy of the old page. Clear your caching plugin's cache after changing these settings and the redirects will take over.
 
+= How do I put my blog posts under /blog/ without it appearing everywhere? =
+
+Tick "Put your blog posts in a folder of their own" in the HivePress URLs section, and set the folder name if you want something other than `blog`. Your posts move to `/blog/my-post/` and everything HivePress stays exactly where it is.
+
+The reason this is an option rather than something you do yourself is that the obvious approach does not work. Setting the permalink structure at the top of the Permalinks page to `/blog/%postname%/` makes WordPress treat `/blog/` as the site's prefix and put it in front of your listings, vendors, categories and tags as well. HivePress's own advice, on the community topic where both approaches were compared, was to add the folder to posts only. That is what this option does. Your posts' previous addresses redirect to the new ones.
+
 = Does this change my category or region archive pages? =
 
 Not unless you ask it to. The structure menus only change the addresses of listings, vendors and requests themselves; your category and region archive addresses are set by HivePress on the same Permalinks page and are left alone. The one exception is the "Keep HivePress addresses at the top level" option, which by design removes the prefix from every HivePress address including those archives, since leaving half of them prefixed is exactly the problem it exists to solve.
@@ -84,6 +91,10 @@ Not unless you ask it to. The structure menus only change the addresses of listi
 No. Your settings are kept by default, even though the WordPress delete screen warns that data will be removed, so a reinstall picks up where you left off. If you want everything gone, tick "Delete all data when this plugin is deleted" in the HivePress URLs section before deleting. Either way, addresses return to the standard HivePress form.
 
 == Changelog ==
+
+= 1.1.0 =
+* New: an option to put ordinary WordPress blog posts in a folder of their own, such as /blog/my-post/, with a folder name you choose. HivePress addresses are left where they are, which is the approach HivePress themselves recommend over setting a prefix in the permalink structure.
+* Blog post addresses used before the folder was switched on are permanently redirected to the new ones, so nothing that was already shared or indexed breaks.
 
 = 1.0.0 =
 * Initial release.

@@ -3,7 +3,7 @@
  * Plugin Name: Permalinks for HivePress
  * Plugin URI: https://github.com/irapidchris-del/permalinks-for-hivepress
  * Description: Build SEO-friendly web addresses for listings, vendors and requests by adding their category and region, with new options on the Permalinks page.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: ChrisB @ HivePress Community
  * Author URI: https://community.hivepress.io/u/chrisb/summary
  * Text Domain: permalinks-for-hivepress
@@ -21,7 +21,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-define( 'HPPL_VERSION', '1.0.0' );
+define( 'HPPL_VERSION', '1.1.0' );
 
 /**
  * Prefix for every option this plugin stores.

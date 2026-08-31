@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Permalinks for HivePress 1.0.0\n"
+"Project-Id-Version: Permalinks for HivePress 1.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/permalinks-for-hivepress\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-31T13:29:37+00:00\n"
+"POT-Creation-Date: 2026-08-31T21:06:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: permalinks-for-hivepress\n"
@@ -19,71 +19,91 @@ msgstr ""
 msgid "Build SEO-friendly web addresses for listings, vendors and requests by adding their category and region, with new options on the Permalinks page."
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1074
+#: includes/components/class-hppl-permalinks.php:1219
 msgid "HivePress URLs"
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1086
+#: includes/components/class-hppl-permalinks.php:1231
+msgid "Blog posts"
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1239
+msgid "Put your blog posts in a folder of their own"
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1240
+msgid "Gives ordinary WordPress posts an address such as /blog/my-post/ while leaving every HivePress address exactly where it is. This is the way round HivePress recommend, because putting a prefix in the permalink structure above would place it in front of your listings and categories as well."
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1244
+msgid "Folder name"
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1245
+msgid "Use a different word here if you prefer, such as news or articles. Whichever you choose, the addresses your posts had before are redirected to the new ones."
+msgstr ""
+
+#: includes/components/class-hppl-permalinks.php:1254
 msgid "Prefix"
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1094
+#: includes/components/class-hppl-permalinks.php:1262
 msgid "Keep HivePress addresses at the top level"
 msgstr ""
 
 #. translators: %s: the prefix taken from the site's permalink structure, such as /blog/.
-#: includes/components/class-hppl-permalinks.php:1097
+#: includes/components/class-hppl-permalinks.php:1265
 #, php-format
 msgid "Your permalink structure adds %s to the front of every address, including HivePress ones. Tick this to leave HivePress addresses without it."
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1106
+#: includes/components/class-hppl-permalinks.php:1274
 msgid "Removing the plugin"
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1114
+#: includes/components/class-hppl-permalinks.php:1282
 msgid "Delete all data when this plugin is deleted"
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1115
+#: includes/components/class-hppl-permalinks.php:1283
 msgid "Your settings above are kept if you delete this plugin, even though the WordPress delete screen warns that data will be removed. Tick this box only if you want the settings deleted for good. This cannot be undone."
 msgstr ""
 
 #. translators: %s: an example address with no extra segments.
-#: includes/components/class-hppl-permalinks.php:1138
+#: includes/components/class-hppl-permalinks.php:1306
 #, php-format
 msgid "Default (%s)"
 msgstr ""
 
 #. translators: 1: the segments listed in order, such as "Category, region", 2: an example address.
-#: includes/components/class-hppl-permalinks.php:1146
+#: includes/components/class-hppl-permalinks.php:1314
 #, php-format
 msgid "%1$s (%2$s)"
 msgstr ""
 
 #. translators: %s: the singular name of the object type, lowercased, such as "listing".
-#: includes/components/class-hppl-permalinks.php:1165
+#: includes/components/class-hppl-permalinks.php:1333
 #, php-format
 msgid "Choose what appears in the address of each %s. Whichever you pick, the old addresses keep working."
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1172
+#: includes/components/class-hppl-permalinks.php:1340
 msgid "Spell out nested terms in full"
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1173
+#: includes/components/class-hppl-permalinks.php:1341
 msgid "A term inside another one brings its parents with it, so a city shows as country/region/city rather than just the city."
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1343
+#: includes/components/class-hppl-permalinks.php:1516
 msgid "Add the category or region to HivePress web addresses to help with SEO. Old addresses keep working: visitors and search engines are sent to the new address automatically, including after you rename something."
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1346
+#: includes/components/class-hppl-permalinks.php:1519
 msgid "These options need pretty permalinks, so choose any permalink structure other than \"Plain\" above first."
 msgstr ""
 
-#: includes/components/class-hppl-permalinks.php:1350
+#: includes/components/class-hppl-permalinks.php:1523
 msgid "No HivePress content types with categories were found on this site yet."
 msgstr ""
 
