@@ -4,7 +4,7 @@ Tags: hivepress, permalinks, seo, urls, listings
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,11 @@ Not unless you ask it to. The structure menus only change the addresses of listi
 No. Your settings are kept by default, even though the WordPress delete screen warns that data will be removed, so a reinstall picks up where you left off. If you want everything gone, tick "Delete all data when this plugin is deleted" in the HivePress URLs section before deleting. Either way, addresses return to the standard HivePress form.
 
 == Changelog ==
+
+= 1.1.1 =
+* Fixed: updating two of these extensions one after the other could fail on the second with "up to date" until Check for updates was pressed again. WordPress rebuilds its update list after each update by asking wordpress.org first, and gives up on the whole list when that call is slow; the plugin now keeps its own update in the list regardless.
+* Changed: a release found more than an hour ago is refreshed in the background whenever the Plugins screen is opened, so the newest release is offered rather than an intermediate one.
+* New: a Check for updates bulk action on the Plugins screen, which checks every selected extension in one go, and the row that says Updating no longer shrinks on phones.
 
 = 1.1.0 =
 * New: an option to put ordinary WordPress blog posts in a folder of their own, such as /blog/my-post/, with a folder name you choose. HivePress addresses are left where they are, which is the approach HivePress themselves recommend over setting a prefix in the permalink structure.
